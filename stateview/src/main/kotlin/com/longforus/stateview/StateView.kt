@@ -61,15 +61,15 @@ class StateView(context: Context,attrs: AttributeSet? = null):FrameLayout(contex
         onSeateChanged?.invoke(STATE_EMPTY)
     }
 
-    override fun <T, DATA : IListBean<T>> getState(bean: IStateBean<T, DATA>): Int {
-        return if (bean.isOk()) {
+    override fun <T, DATA : IListBean<T>> getState(bean: IStateBean<T, DATA>?): Int {
+        return if (bean?.isOk() ==true) {
             if (bean.data?.list == null || bean.data!!.list.isEmpty()) STATE_EMPTY else STATE_SUCCESS
         } else {
             STATE_ERROR
         }
     }
 
-    override fun <T, DATA : IListBean<T>> setData(bean: IStateBean<T, DATA>) {
+    override fun <T, DATA : IListBean<T>> setData(bean: IStateBean<T, DATA>?) {
         when (getState(bean)) {
             STATE_SUCCESS->showSuccess()
             STATE_EMPTY->showEmpty()

@@ -1,27 +1,36 @@
 package com.example.longforus.testinclude
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.longforus.stateview.IStateView
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),IMainListView {
+    override var mPresenter: IMainListPresenter? = null
 
-    val successBean = ResultBean("0","success", ResultList(listOf("long","for","us")))
-    val errorBean = ResultBean("1","net error",null)
-    val emptyBean = ResultBean("0","success", ResultList(listOf()))
+    override fun getContext(): Context {
+        return this
+    }
+
+
+    override fun getStateView(): IStateView {
+        return sv
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        mPresenter =  MainListPresenterImpl(this)
         btn_empty.setOnClickListener {
-            sv.setData(emptyBean)
+            mPresenter?.onClick(3)
         }
         btn_success.setOnClickListener {
-            sv.setData(successBean)
+            mPresenter?.onClick(1)
         }
         btn_error.setOnClickListener {
-            sv.setData(errorBean)
+            mPresenter?.onClick(2)
         }
-        println("main ${rv.id}")
+
     }
 }

@@ -22,8 +22,8 @@ interface IStateView {
     @ViewState
     var onSeateChanged: ((Int) -> Unit)?
 
-    fun <T, DATA : IListBean<T>> getState(bean: IStateBean<T, DATA>): Int
-    fun <T, DATA : IListBean<T>> setData(bean: IStateBean<T, DATA>)
+    fun <T, DATA : IListBean<T>> getState(bean: IStateBean<T, DATA>?): Int
+    fun <T, DATA : IListBean<T>> setData(bean: IStateBean<T, DATA>?)
 }
 
 
