@@ -20,7 +20,9 @@ interface IStateView {
     fun showError(msg: String? = null)
     fun showEmpty(msg: String? = null)
     @ViewState
-    var onSeateChanged: ((Int) -> Unit)?
+    var onStateChanged: ((Int) -> Unit)?
+
+    var onRetry:(()->Unit)?
 
     fun <T, DATA : IListBean<T>> getState(bean: IStateBean<T, DATA>?): Int
     fun <T, DATA : IListBean<T>> setData(bean: IStateBean<T, DATA>?)

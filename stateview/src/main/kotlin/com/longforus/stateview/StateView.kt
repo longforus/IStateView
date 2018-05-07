@@ -14,29 +14,29 @@ import kotlinx.android.synthetic.main.view_state_layout.view.*
  * @author  XQ Yang
  * @date 5/6/2018  12:23 PM
  */
-class StateView(context: Context,attrs: AttributeSet? = null):FrameLayout(context,attrs),IStateView{
-
+class StateView(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs), IStateView {
+    override var onRetry: (() -> Unit)? = null
     override var bindView: View? = null
-    private val emptyLayout:View by lazy {
+    private val emptyLayout: View by lazy {
         val view = vs_empty.inflate()
         tv_empty.text = emptyMsg
         view
     }
-    private val errorLayout:View by lazy {
+    private val errorLayout: View by lazy {
         val view = vs_error.inflate()
         tv_error.text = errorMsg
         view
     }
     override var emptyMsg: String = "這里什么也没有噢!ヾ(･ω･`｡)"
-    override var errorMsg: String= "怎么回事,出错了!(⊙_⊙)?"
-    override var onSeateChanged: ((Int) -> Unit)? = null
+    override var errorMsg: String = "怎么回事,出错了!(⊙_⊙)?"
+    override var onStateChanged: ((Int) -> Unit)? = null
     override var curState: Int = STATE_EMPTY
 
     override fun showSuccess() {
         hideAll()
         bindView?.visibility = View.VISIBLE
         curState = STATE_SUCCESS
-        onSeateChanged?.invoke(STATE_SUCCESS)
+        onStateChanged?.invoke(STATE_SUCCESS)
     }
 
     var bindViewId = 0
@@ -46,9 +46,12 @@ class StateView(context: Context,attrs: AttributeSet? = null):FrameLayout(contex
         msg?.let {
             tv_error.text = it
         }
+        onRetry?.let {
+            btn_retry.setOnClickListener { onRetry?.invoke() }
+        }
         errorLayout.visibility = View.VISIBLE
         curState = STATE_ERROR
-        onSeateChanged?.invoke(STATE_ERROR)
+        onStateChanged?.invoke(STATE_ERROR)
     }
 
     override fun showEmpty(msg: String?) {
@@ -58,11 +61,11 @@ class StateView(context: Context,attrs: AttributeSet? = null):FrameLayout(contex
         }
         emptyLayout.visibility = View.VISIBLE
         curState = STATE_EMPTY
-        onSeateChanged?.invoke(STATE_EMPTY)
+        onStateChanged?.invoke(STATE_EMPTY)
     }
 
     override fun <T, DATA : IListBean<T>> getState(bean: IStateBean<T, DATA>?): Int {
-        return if (bean?.isOk() ==true) {
+        return if (bean?.isOk() == true) {
             if (bean.data?.list == null || bean.data!!.list.isEmpty()) STATE_EMPTY else STATE_SUCCESS
         } else {
             STATE_ERROR
@@ -71,13 +74,13 @@ class StateView(context: Context,attrs: AttributeSet? = null):FrameLayout(contex
 
     override fun <T, DATA : IListBean<T>> setData(bean: IStateBean<T, DATA>?) {
         when (getState(bean)) {
-            STATE_SUCCESS->showSuccess()
-            STATE_EMPTY->showEmpty()
-            STATE_ERROR->showError()
+            STATE_SUCCESS -> showSuccess()
+            STATE_EMPTY -> showEmpty()
+            STATE_ERROR -> showError()
         }
     }
 
-    private fun hideAll(){
+    private fun hideAll() {
         if (bindView == null) {
             bindView = findViewById(bindViewId)
         }
@@ -87,9 +90,9 @@ class StateView(context: Context,attrs: AttributeSet? = null):FrameLayout(contex
     }
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.view_state_layout,this,true)
+        LayoutInflater.from(context).inflate(R.layout.view_state_layout, this, true)
         val attributes = context.obtainStyledAttributes(attrs, R.styleable.StateView)
-        bindViewId =  attributes.getResourceId(R.styleable.StateView_bindId, -1)
+        bindViewId = attributes.getResourceId(R.styleable.StateView_bindId, -1)
         attributes.recycle()
     }
 }
