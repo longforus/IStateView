@@ -2,5 +2,10 @@
 <resources>
     <declare-styleable name="StateView">
         <attr name="bindId" format="reference"/>
+        <attr name="errorMsg" format="string"/>
+        <attr name="emptyMsg" format="string"/>
+        <attr name="btnText" format="string"/>
+        <attr name="emptyIcon" format="reference"/>
+        <attr name="errorIcon" format="reference"/>
     </declare-styleable>
 </resources>

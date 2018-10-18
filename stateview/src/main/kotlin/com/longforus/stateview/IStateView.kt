@@ -16,6 +16,9 @@ interface IStateView {
     var curState: Int
     var errorMsg:String
     var emptyMsg:String
+    var btnText:String
+    var errorIcon:Int
+    var emptyIcon:Int
     fun showSuccess()
     fun showError(msg: String? = null)
     fun showEmpty(msg: String? = null)
